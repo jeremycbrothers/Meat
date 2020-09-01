@@ -117,7 +117,6 @@ void APlayerCharacter::CheckForInteractables()
 			if (Interactable)
 			{
 				PlayerController->CurrentInteractable = Interactable;
-				UE_LOG(LogTemp, Warning, TEXT("Interactable actor found!"));
 				return;
 			}
 		}
