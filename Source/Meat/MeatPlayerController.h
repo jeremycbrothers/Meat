@@ -22,4 +22,8 @@ protected:
 	void Interact();
 
 	virtual void SetupInputComponent() override;
+
+private:
+	void LeftUnequip();
+	void RightUnequip();
 };

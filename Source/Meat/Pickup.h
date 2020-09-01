@@ -28,6 +28,8 @@ public:
 
 	void Interact_Implementation(AMeatPlayerController* Controller) override;
 
+	ECarryType GetCarryType() const { return CarryType; }
+
 protected:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* PickupMesh;
