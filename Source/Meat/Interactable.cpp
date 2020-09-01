@@ -6,7 +6,7 @@ AInteractable::AInteractable()
 	Action = "interact";
 }
 
-void AInteractable::Interact_Implementation(APlayerController* Controller)
+void AInteractable::Interact_Implementation(AMeatPlayerController* Controller)
 {
 	return;
 }

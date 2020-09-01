@@ -26,16 +26,13 @@ class MEAT_API APickup : public AInteractable
 public:
 	APickup();
 
-	void Interact_Implementation(APlayerController* Controller) override;
+	void Interact_Implementation(AMeatPlayerController* Controller) override;
 
 protected:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* PickupMesh;
 
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
-	bool bCanBeEquipped;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
 	ECarryType CarryType;
 };

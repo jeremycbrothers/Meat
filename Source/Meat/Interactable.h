@@ -15,8 +15,8 @@ public:
 	AInteractable();
 
 	UFUNCTION(BlueprintNativeEvent)
-		void Interact(APlayerController* Controller);
-	virtual void Interact_Implementation(APlayerController* Controller);
+		void Interact(AMeatPlayerController* Controller);
+	virtual void Interact_Implementation(AMeatPlayerController* Controller);
 
 	UPROPERTY(EditDefaultsOnly)
 		FString Name;

@@ -11,11 +11,11 @@ APickup::APickup()
 	Super::Name = "Item";
 	Super::Action = "pickup";
 
-	bCanBeEquipped = false;
 	CarryType = ECarryType::ECT_NoEquip;
 }
 
-void APickup::Interact_Implementation(APlayerController* Controller)
+void APickup::Interact_Implementation(AMeatPlayerController* Controller)
 {
 	Super::Interact_Implementation(Controller);
+	
 }
