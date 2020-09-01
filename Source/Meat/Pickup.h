@@ -38,9 +38,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
 	ECarryType CarryType;
-
-	FString CType;
-
-	// Debug function
-	FString SwitchOnCarryType();
 };
