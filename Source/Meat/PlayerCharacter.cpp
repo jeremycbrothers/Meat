@@ -47,6 +47,27 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 }
 
+void APlayerCharacter::SetLeftHandEquipped(bool Value)
+{
+	bLeftHandEquipped = Value;
+}
+
+void APlayerCharacter::SetRightHandEquipped(bool Value)
+{
+	bRightHandEquipped = Value;
+}
+
+bool APlayerCharacter::GetTwoHandedEquip() const
+{
+	return bLeftHandEquipped && bRightHandEquipped;
+}
+
+void APlayerCharacter::SetTwoHandedEquip(bool Value)
+{
+	bLeftHandEquipped = Value;
+	bRightHandEquipped = Value;
+}
+
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
@@ -101,7 +122,7 @@ void APlayerCharacter::CheckForInteractables()
 	// Create a LineTrace to check for a hit
 	FHitResult HitResult;
 
-	int32 Range = 500;
+	int32 Range = 700;
 	FVector StartTrace = FollowCamera->GetComponentLocation();
 	FVector EndTrace = (FollowCamera->GetForwardVector() * Range) + StartTrace;
 

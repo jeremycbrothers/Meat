@@ -15,6 +15,15 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
+	bool GetLeftHandEquipped() const { return bLeftHandEquipped; }
+	void SetLeftHandEquipped(bool Value);
+
+	bool GetRightHandEquipped() const { return bRightHandEquipped; }
+	void SetRightHandEquipped(bool Value);
+
+	bool GetTwoHandedEquip() const;
+	void SetTwoHandedEquip(bool Value);
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -47,6 +56,10 @@ private:
 	/** Base look up/down rate in degrees/second. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	float BaseLookupRate;
+
+	bool bLeftHandEquipped;
+
+	bool bRightHandEquipped;
 
 	/** Called for forwards/backwards input */
 	void MoveForward(float Value);
