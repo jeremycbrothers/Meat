@@ -12,6 +12,8 @@ class MEAT_API APlayerCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	FVector PreviousLocation;
+
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
@@ -23,6 +25,8 @@ public:
 
 	bool GetTwoHandedEquip() const;
 	void SetTwoHandedEquip(bool Value);
+
+	void CalculateFear(float ExponentialFactor);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -60,6 +64,8 @@ private:
 	bool bLeftHandEquipped;
 
 	bool bRightHandEquipped;
+
+	float FearAmount;
 
 	/** Called for forwards/backwards input */
 	void MoveForward(float Value);

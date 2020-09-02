@@ -45,6 +45,8 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	FearAmount = 0.f;
 }
 
 void APlayerCharacter::SetLeftHandEquipped(bool Value)
@@ -66,6 +68,11 @@ void APlayerCharacter::SetTwoHandedEquip(bool Value)
 {
 	bLeftHandEquipped = Value;
 	bRightHandEquipped = Value;
+}
+
+void APlayerCharacter::CalculateFear(float ExponentialFactor)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Factor: %f"), ExponentialFactor);
 }
 
 // Called every frame
