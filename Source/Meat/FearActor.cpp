@@ -45,9 +45,11 @@ void AFearActor::DetectionSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComp
 {
 	if (PlayerCharacterRef)
 	{
-		PlayerCharacterRef = nullptr;
 		bCanDrawVector = false;
 		bCanStartDecreaseFear = true;
+		ExponentialFactor = 1.f;
+		PlayerCharacterRef->StartReducingFear = true;
+		PlayerCharacterRef = nullptr;
 	}
 }
 
@@ -64,29 +66,32 @@ void AFearActor::Tick(float DeltaTime)
 
 			int32 Range = SphereRadius;
 			FVector StartTrace = GetActorLocation(); // Really this needs to be arround the top of the mesh.
-			FVector EndTrace(0.f, 0.f, 0.f);
-			EndTrace = PlayerCharacterRef->GetActorLocation(); // This needs to be the end of the sphere or the location of the OtherActor. Which ever is closest.
-			if(PlayerCharacterRef->PreviousLocation == FVector(0.f,0.f,0.f))
-				PlayerCharacterRef->PreviousLocation = EndTrace;
-			if (PlayerCharacterRef->PreviousLocation != EndTrace)
+			FVector EndTrace = PlayerCharacterRef->GetActorLocation(); // This needs to be the end of the sphere or the location of the OtherActor. Which ever is closest.
+			
+			FVector SpaceBetweenPlayerAndFear = StartTrace - EndTrace;
+			if (SpaceBetweenPlayerAndFear.Size() != PlayerCharacterRef->PreviousLocation.Size())
 			{
-				float Length = PlayerCharacterRef->PreviousLocation.Size() - EndTrace.Size();
-				if (Length > 0)
+				if (SpaceBetweenPlayerAndFear.Size() > PlayerCharacterRef->PreviousLocation.Size() && !FMath::IsNearlyZero(ExponentialFactor))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("closer"));
-					PlayerCharacterRef->PreviousLocation = EndTrace;
-					ExponentialFactor *= 1.01f;
+					if (ExponentialFactor > 0.f)
+					{
+						ExponentialFactor = 0.f;
+					}
+					ExponentialFactor -= 0.01f;
 				}
-				else if (Length < 0 && ExponentialFactor > 0.9f)
+				else
 				{
-					UE_LOG(LogTemp, Warning, TEXT("away"));
-					ExponentialFactor /= 1.01f;
+					ExponentialFactor += 0.02f;
 				}
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("equal"));
+				if (ExponentialFactor <= 0.f)
+				{
+					ExponentialFactor = 0.f;
+				}
 			}
+			PlayerCharacterRef->PreviousLocation = SpaceBetweenPlayerAndFear;
 			
 			FCollisionQueryParams Params;
 			Params.AddIgnoredActor(this);
@@ -103,12 +108,6 @@ void AFearActor::Tick(float DeltaTime)
 				}
 			}
 		}
-	}
-
-	if (bCanStartDecreaseFear && ExponentialFactor >= 0.9f)
-	{
-		ExponentialFactor /= 1.01f;
-		//UE_LOG(LogTemp, Warning, TEXT("Factor: %f"), ExponentialFactor);
 	}
 }
 

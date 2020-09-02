@@ -14,6 +14,8 @@ class MEAT_API APlayerCharacter : public ACharacter
 public:
 	FVector PreviousLocation;
 
+	bool StartReducingFear;
+
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
@@ -64,8 +66,10 @@ private:
 	bool bLeftHandEquipped;
 
 	bool bRightHandEquipped;
-
+	
 	float FearAmount;
+
+	float MaxFearAmount;
 
 	/** Called for forwards/backwards input */
 	void MoveForward(float Value);

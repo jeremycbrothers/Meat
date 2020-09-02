@@ -46,7 +46,9 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	FearAmount = 0.f;
+	FearAmount = 1.f;
+	MaxFearAmount = 1000.f;
+	StartReducingFear = false;
 }
 
 void APlayerCharacter::SetLeftHandEquipped(bool Value)
@@ -72,7 +74,15 @@ void APlayerCharacter::SetTwoHandedEquip(bool Value)
 
 void APlayerCharacter::CalculateFear(float ExponentialFactor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Factor: %f"), ExponentialFactor);
+	FearAmount += ExponentialFactor;
+	if (FearAmount > MaxFearAmount)
+	{
+		FearAmount = MaxFearAmount;
+	}
+	if (FearAmount < 1.f)
+	{
+		FearAmount = 1.f;
+	}
 }
 
 // Called every frame
@@ -80,6 +90,14 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	CheckForInteractables();
+	if (StartReducingFear)
+	{
+		FearAmount -= 1.f;
+		if (FearAmount <= 1.f)
+		{
+			StartReducingFear = false;
+		}
+	}
 }
 
 // Called when the game starts or when spawned
