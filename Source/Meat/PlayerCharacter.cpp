@@ -78,6 +78,7 @@ void APlayerCharacter::CalculateFear(float ExponentialFactor)
 	if (FearAmount > MaxFearAmount)
 	{
 		FearAmount = MaxFearAmount;
+		UE_LOG(LogTemp, Warning, TEXT("You are freaked the fuck out!"));
 	}
 	if (FearAmount < 1.f)
 	{
@@ -96,6 +97,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		if (FearAmount <= 1.f)
 		{
 			StartReducingFear = false;
+			UE_LOG(LogTemp, Warning, TEXT("Whew! That was close! You're feeling a little better now."));
 		}
 	}
 }

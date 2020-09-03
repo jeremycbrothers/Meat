@@ -32,12 +32,10 @@ void AFearActor::BeginPlay()
 
 void AFearActor::DetectionSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlap Begin"));
 	if (OtherActor)
 	{
 		PlayerCharacterRef = Cast<APlayerCharacter>(OtherActor);
 		bCanDrawVector = true;
-		bCanStartDecreaseFear = false;
 	}
 }
 
@@ -46,7 +44,6 @@ void AFearActor::DetectionSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComp
 	if (PlayerCharacterRef)
 	{
 		bCanDrawVector = false;
-		bCanStartDecreaseFear = true;
 		ExponentialFactor = 1.f;
 		PlayerCharacterRef->StartReducingFear = true;
 		PlayerCharacterRef = nullptr;
@@ -64,15 +61,28 @@ void AFearActor::Tick(float DeltaTime)
 			// Create a LineTrace to check for a hit
 			FHitResult HitResult;
 
-			int32 Range = SphereRadius;
-			FVector StartTrace = GetActorLocation(); // Really this needs to be arround the top of the mesh.
-			FVector EndTrace = PlayerCharacterRef->GetActorLocation(); // This needs to be the end of the sphere or the location of the OtherActor. Which ever is closest.
+			FCollisionQueryParams Params;
+			Params.AddIgnoredActor(this);
 			
-			FVector SpaceBetweenPlayerAndFear = StartTrace - EndTrace;
+			// Create the data for the line trace vector
+			int32 Range = SphereRadius;
+			FVector StartTrace = GetActorLocation() + FVector(0.f,0.f,90.f); 
+			FVector PlayerEnd = PlayerCharacterRef->GetActorLocation() + FVector(0.f, 0.f, 90.f);
+			FVector EndTrace = PlayerEnd; // This needs to be the end of the sphere or the location of the OtherActor. Which ever is closest.
+			
+			FVector SpaceBetweenPlayerAndFear = StartTrace - EndTrace; // Distance between fear object and player
+
+			// Only increase or decrease the amount of fear to apply if current vector is not the same size as the previous vector.
+			// Otherwise, we set the exponential factor is zero. That way the fear does not increase or decrease, because neither the player, nor 
+			// the fear object is moving towards or away from each other.
 			if (SpaceBetweenPlayerAndFear.Size() != PlayerCharacterRef->PreviousLocation.Size())
 			{
+				// If the current vector is larger than the previous vector, the player is fruther away from the fear object.
+				// Otherwise, the player is closer and we'll want to increase the amount of the expontial factor.
 				if (SpaceBetweenPlayerAndFear.Size() > PlayerCharacterRef->PreviousLocation.Size() && !FMath::IsNearlyZero(ExponentialFactor))
 				{
+					// We want to decrease the players fear as they move further from the fear object. So, if the exponential factor is positive, we it to zero.
+					// Then, we start decreasing the exponential factor.
 					if (ExponentialFactor > 0.f)
 					{
 						ExponentialFactor = 0.f;
@@ -91,19 +101,17 @@ void AFearActor::Tick(float DeltaTime)
 					ExponentialFactor = 0.f;
 				}
 			}
+
 			PlayerCharacterRef->PreviousLocation = SpaceBetweenPlayerAndFear;
-			
-			FCollisionQueryParams Params;
-			Params.AddIgnoredActor(this);
 
 			UWorld* World = GetWorld();
 			if (World)
 			{
 				World->LineTraceSingleByChannel(HitResult, StartTrace, EndTrace, ECC_Visibility, Params);
-				DrawDebugLine(World, StartTrace, EndTrace, FColor(255, 0, 0), false, 0.016, 0, 5.f);
 				APlayerCharacter* PC = Cast<APlayerCharacter>(HitResult.GetActor());
 				if (PC)
 				{
+					//DrawDebugLine(World, StartTrace, EndTrace, FColor(255, 0, 0), false, 0.016, 0, 5.f);
 					PlayerCharacterRef->CalculateFear(ExponentialFactor);
 				}
 			}

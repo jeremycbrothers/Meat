@@ -39,5 +39,4 @@ private:
 	float ExponentialFactor;
 	float SphereRadius;
 	bool bCanDrawVector;
-	bool bCanStartDecreaseFear;
 };
