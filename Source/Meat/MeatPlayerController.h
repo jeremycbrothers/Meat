@@ -19,11 +19,33 @@ public:
 	class AInteractable* CurrentInteractable;
 
 protected:
+	/** Reference to the UMG asset in the editor */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	TSubclassOf<class UUserWidget> AimReticleAsset;
+
+	/** Variable to hold the widget after creating it */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	UUserWidget* AimReticleOverlay;
+
 	void Interact();
 
 	virtual void SetupInputComponent() override;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widgets")
+	void DisplayAimReticle();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widgets")
+	void RemoveAimReticle();
+
+protected:
+	void BeginPlay() override;
+
 private:
+	bool bRMBDown;
+	bool bResetAimReticle;
+
 	void LeftUnequip();
 	void RightUnequip();
+	void RMBDown();
+	void RMBUp();
 };

@@ -5,6 +5,7 @@
 #include "Interactable.h"
 #include "Pickup.h"
 #include "PlayerCharacter.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/SkeletalMeshSocket.h"
 
 void AMeatPlayerController::Interact()
@@ -19,8 +20,26 @@ void AMeatPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	InputComponent->BindAction("Interact", IE_Pressed, this, &AMeatPlayerController::Interact);
+	InputComponent->BindAction("RMB", IE_Pressed, this, &AMeatPlayerController::RMBDown);
+	InputComponent->BindAction("RMB", IE_Released, this, &AMeatPlayerController::RMBUp);
+
 	InputComponent->BindAction("LeftUnequip", IE_Pressed, this, &AMeatPlayerController::LeftUnequip);
 	InputComponent->BindAction("RightUnequip", IE_Pressed, this, &AMeatPlayerController::RightUnequip);
+}
+
+void AMeatPlayerController::DisplayAimReticle_Implementation()
+{
+}
+
+void AMeatPlayerController::RemoveAimReticle_Implementation()
+{
+}
+
+void AMeatPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+
 }
 
 void AMeatPlayerController::LeftUnequip()
@@ -59,4 +78,21 @@ void AMeatPlayerController::RightUnequip()
 			}
 		}
 	}
+}
+
+void AMeatPlayerController::RMBDown()
+{
+	bRMBDown = true;
+	if (AimReticleAsset)
+	{
+		AimReticleOverlay = CreateWidget<UUserWidget>(this, AimReticleAsset);
+	}
+	AimReticleOverlay->AddToViewport();
+	AimReticleOverlay->SetVisibility(ESlateVisibility::Visible);
+}
+
+void AMeatPlayerController::RMBUp()
+{
+	bRMBDown = false;
+	AimReticleOverlay->RemoveFromParent();
 }
