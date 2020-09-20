@@ -6,6 +6,7 @@
 #include "Pickup.h"
 #include "PlayerCharacter.h"
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 
 void AMeatPlayerController::Interact()
@@ -38,13 +39,11 @@ void AMeatPlayerController::RemoveAimReticle_Implementation()
 void AMeatPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-
+	PC = Cast<APlayerCharacter>(GetCharacter());
 }
 
 void AMeatPlayerController::LeftUnequip()
 {
-	APlayerCharacter* PC = Cast<APlayerCharacter>(GetCharacter());
 	if (PC && PC->GetLeftHandEquipped())
 	{
 		TArray<AActor*>AttachedActors;
@@ -63,7 +62,6 @@ void AMeatPlayerController::LeftUnequip()
 
 void AMeatPlayerController::RightUnequip()
 {
-	APlayerCharacter* PC = Cast<APlayerCharacter>(GetCharacter());
 	if (PC && PC->GetRightHandEquipped())
 	{
 		TArray<AActor*>AttachedActors;
@@ -89,10 +87,20 @@ void AMeatPlayerController::RMBDown()
 	}
 	AimReticleOverlay->AddToViewport();
 	AimReticleOverlay->SetVisibility(ESlateVisibility::Visible);
+
+	// Here you may want to add a check to make sure no menus are open as well. Such as inventory or game settings.
+	if (PC)
+	{
+		PC->bUseControllerRotationYaw = true;
+	}
 }
 
 void AMeatPlayerController::RMBUp()
 {
 	bRMBDown = false;
 	AimReticleOverlay->RemoveFromParent();
+	if (PC)
+	{
+		PC->bUseControllerRotationYaw = false;
+	}
 }

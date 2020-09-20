@@ -41,6 +41,7 @@ protected:
 	void BeginPlay() override;
 
 private:
+	class APlayerCharacter* PC;
 	bool bRMBDown;
 	bool bResetAimReticle;
 

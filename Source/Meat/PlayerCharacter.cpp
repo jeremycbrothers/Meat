@@ -11,6 +11,8 @@
 #include "MeatPlayerController.h"
 #include "Interactable.h"
 
+#include "DrawDebugHelpers.h"
+
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -155,6 +157,8 @@ void APlayerCharacter::CheckForInteractables()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+
+	//DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Emerald, false, .0167, '\000', 1.f);
 
 	AMeatPlayerController* PlayerController = Cast<AMeatPlayerController>(GetController());
 	if (PlayerController)
