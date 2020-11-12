@@ -77,6 +77,7 @@ void APlayerCharacter::SetTwoHandedEquip(bool Value)
 void APlayerCharacter::CalculateFear(float ExponentialFactor)
 {
 	FearAmount += ExponentialFactor;
+	UE_LOG(LogTemp, Warning, TEXT("%f"), FearAmount);
 	if (FearAmount > MaxFearAmount)
 	{
 		FearAmount = MaxFearAmount;
@@ -96,6 +97,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	if (StartReducingFear)
 	{
 		FearAmount -= 1.f;
+		UE_LOG(LogTemp, Warning, TEXT("%f"), FearAmount);
 		if (FearAmount <= 1.f)
 		{
 			StartReducingFear = false;
@@ -158,7 +160,7 @@ void APlayerCharacter::CheckForInteractables()
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 
-	//DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Emerald, false, .0167, '\000', 1.f);
+	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Emerald, false, .0167, '\000', 1.f);
 
 	AMeatPlayerController* PlayerController = Cast<AMeatPlayerController>(GetController());
 	if (PlayerController)
@@ -169,6 +171,7 @@ void APlayerCharacter::CheckForInteractables()
 			if (Interactable)
 			{
 				PlayerController->CurrentInteractable = Interactable;
+				UE_LOG(LogTemp, Warning, TEXT("Press E to pick up"));
 				return;
 			}
 		}

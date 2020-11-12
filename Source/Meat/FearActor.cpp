@@ -73,7 +73,7 @@ void AFearActor::Tick(float DeltaTime)
 			FVector SpaceBetweenPlayerAndFear = StartTrace - EndTrace; // Distance between fear object and player
 
 			// Only increase or decrease the amount of fear to apply if current vector is not the same size as the previous vector.
-			// Otherwise, we set the exponential factor is zero. That way the fear does not increase or decrease, because neither the player, nor 
+			// Otherwise, we set the exponential factor to zero. That way the fear does not increase or decrease, because neither the player, nor 
 			// the fear object is moving towards or away from each other.
 			if (SpaceBetweenPlayerAndFear.Size() != PlayerCharacterRef->PreviousLocation.Size())
 			{
@@ -111,7 +111,7 @@ void AFearActor::Tick(float DeltaTime)
 				APlayerCharacter* PC = Cast<APlayerCharacter>(HitResult.GetActor());
 				if (PC)
 				{
-					//DrawDebugLine(World, StartTrace, EndTrace, FColor(255, 0, 0), false, 0.016, 0, 5.f);
+					DrawDebugLine(World, StartTrace, EndTrace, FColor(255, 0, 0), false, 0.016, 0, 5.f);
 					PlayerCharacterRef->CalculateFear(ExponentialFactor);
 				}
 			}
